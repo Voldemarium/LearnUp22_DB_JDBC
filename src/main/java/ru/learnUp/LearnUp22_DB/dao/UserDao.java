@@ -1,5 +1,6 @@
 package ru.learnUp.LearnUp22_DB.dao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -12,13 +13,21 @@ import java.time.ZoneOffset;
 public class UserDao {
 
 	private static final String FIND_BY_ID = "SELECT * FROM public.user WHERE id = :id";
+
 	private static final String SAVE = "INSERT INTO public.user (name, surname, address, birth_date)" +
 			" values (:name, :surname, :address, :birth_date)";
 
 	private final NamedParameterJdbcTemplate template;
+	private final JdbcTemplate templateDDL;
 
-	public UserDao(NamedParameterJdbcTemplate template) {
+	public UserDao(NamedParameterJdbcTemplate template, JdbcTemplate templateDDL) {
 		this.template = template;
+		this.templateDDL = templateDDL;
+	}
+
+
+	public void queryDDL(String queryDDL) {
+		templateDDL.execute(queryDDL);
 	}
 
 	public void save(User user) {
