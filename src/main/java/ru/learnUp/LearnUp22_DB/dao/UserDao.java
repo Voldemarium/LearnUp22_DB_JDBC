@@ -8,13 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 
 import java.time.ZoneOffset;
+import java.util.Optional;
 
 @Repository
 public class UserDao {
 
 	private static final String FIND_BY_ID = "SELECT * FROM public.user WHERE id = :id";
 
-	private static final String SAVE = "INSERT INTO public.user (name, surname, address, birth_date)" +
+	private static final String SAVE_USER = "INSERT INTO public.user (name, surname, address, birth_date)" +
 			" values (:name, :surname, :address, :birth_date)";
 
 	private final NamedParameterJdbcTemplate template;
@@ -30,9 +31,9 @@ public class UserDao {
 		templateDDL.execute(queryDDL);
 	}
 
-	public void save(User user) {
+	public void saveUser (User user) {
 		template.update(
-				SAVE,
+				SAVE_USER,
 				new MapSqlParameterSource()
 						.addValue("name", user.getName())
 						.addValue("surname", user.getSurname())
@@ -43,7 +44,7 @@ public class UserDao {
 		);
 	}
 
-	public User findById(long id) {
+	public Optional <User> findById(long id) {
 		return template.query(
 						FIND_BY_ID,
 						new MapSqlParameterSource("id", id),
@@ -55,7 +56,6 @@ public class UserDao {
 								.birth_date(rs.getDate("birth_date").toLocalDate())
 								.build()
 				).stream()
-				.findAny()
-				.orElseThrow(() -> new RuntimeException("user with id = " + id + "is not found"));
+				.findAny();
 	}
 }

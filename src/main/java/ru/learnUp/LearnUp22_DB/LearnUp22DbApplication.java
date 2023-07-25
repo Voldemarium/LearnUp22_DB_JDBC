@@ -46,9 +46,10 @@ public class LearnUp22DbApplication {
 				.birth_date(LocalDate.of(1999, 5, 12))
 				.build();
 		// Добавление строки в таблицу с user1
-		userDao.save(user1);
+		userDao.saveUser(user1);
+
 		// Поиск по id=1 записи в таблице и возвращение объекта User
-		User user = userDao.findById(1);
+		User user = userDao.findById(1).orElse(null);
 		log.info("{}",  user);
 
     // Создание user2
@@ -58,8 +59,9 @@ public class LearnUp22DbApplication {
 				.address("Russia")
 				.birth_date(LocalDate.of(2001, 2, 4))
 				.build();
+		// Добавление строки в таблицу с user1
+		userDao.saveUser(user2);
 		// Поиск по id=2 записи в таблице и возвращение объекта User
-		userDao.save(user2);
 		log.info("{}", userDao.findById(2));
 	}
 }
